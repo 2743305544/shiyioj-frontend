@@ -1,9 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import GlobalHeader from "@/components/GlobalHeader.vue";
+</script>
 
 <template>
   <div id="BasicLayout">
     <a-layout style="height: 400px">
-      <a-layout-header class="header">导航栏</a-layout-header>
+      <a-layout-header class="header">
+        <GlobalHeader />
+      </a-layout-header>
       <a-layout-content class="content">
         <router-view />
       </a-layout-content>
@@ -20,7 +24,8 @@
 #BasicLayout {
 }
 #BasicLayout .header {
-  background: red;
+  margin-bottom: 16px;
+  box-shadow: #eee 1px 1px 5px;
 }
 #BasicLayout .content {
   background: linear-gradient(to right, #bbb, #fff);
