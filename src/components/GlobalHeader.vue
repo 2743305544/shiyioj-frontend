@@ -20,13 +20,16 @@ console.log(store.state.user.loginUser);
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
     userName: "失意",
+    role: "admin",
   });
 }, 3000);
+
+const visibleRouters = routes.filter((item) => !item.meta?.hideInMenu);
 </script>
 
 <template>
   <div>
-    <a-row id="globalHeader" style="margin-bottom: 5px" align="center">
+    <a-row id="globalHeader" align="center">
       <!--      <a-col flex="100px"> </a-col>-->
       <a-col flex="auto">
         <a-menu
@@ -44,7 +47,7 @@ setTimeout(() => {
               <div class="title">ShiYi OJ</div>
             </div>
           </a-menu-item>
-          <a-menu-item v-for="item in routes" :key="item.path">{{
+          <a-menu-item v-for="item in visibleRouters" :key="item.path">{{
             item.name
           }}</a-menu-item>
         </a-menu>

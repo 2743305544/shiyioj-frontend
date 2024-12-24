@@ -8,6 +8,27 @@ export const routes: Array<RouteRecordRaw> = [
     component: HomeView,
   },
   {
+    path: "/admin",
+    name: "管理员可见",
+    component: () => import("@/views/AdminView.vue"),
+    meta: {
+      access: "canAdmin",
+    },
+  },
+  {
+    path: "/hide",
+    name: "隐藏页面",
+    component: () => import("@/views/AdminView.vue"),
+    meta: {
+      hideInMenu: true,
+    },
+  },
+  {
+    path: "/404",
+    name: "404",
+    component: () => import("@/views/404Page.vue"),
+  },
+  {
     path: "/about",
     name: "关于我的",
     // route level code-splitting

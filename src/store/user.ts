@@ -29,17 +29,19 @@ export default {
   state: () => ({
     loginUser: {
       userName: "未登录",
+      role: "notLogin",
     },
   }),
   getters,
   actions: {
     getLoginUser({ commit, state }, payload) {
       // TODO 远程登录
-      commit("updateUser", { userName: "失意" });
+      commit("updateUser", payload);
     },
   },
   mutations: {
     updateUser(state, payload) {
+      console.log(payload);
       state.loginUser = payload;
     },
   },
