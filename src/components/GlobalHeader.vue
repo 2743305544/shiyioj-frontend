@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { routes } from "@/router/routes";
 import { useRoute, useRouter } from "vue-router";
-import { Ref, ref } from "vue";
+import { computed, reactive, Ref, ref, watch } from "vue";
 import { useStore } from "vuex";
+import { checkAccess } from "@/access/checkAccess";
+import ACCESS_ENUM from "@/access/accessEnum";
 const router = useRouter();
 
 const selectedKeys: Ref<string[]> = ref<string[]>(["/"]);
@@ -16,15 +18,26 @@ const doMenuClick = (key: string) => {
 };
 
 const store = useStore();
-console.log(store.state.user.loginUser);
+// console.log(store.state.user.loginUser);
 setTimeout(() => {
   store.dispatch("user/getLoginUser", {
     userName: "失意",
-    role: "admin",
+    userRole: ACCESS_ENUM.ADMIN,
   });
 }, 3000);
 
-const visibleRouters = routes.filter((item) => !item.meta?.hideInMenu);
+const visibleRouters = computed(() => {
+  return routes.filter((item) => {
+    if (item.meta?.hideInMenu) {
+      return false;
+    }
+    return checkAccess(store.state.user.loginUser, item?.meta?.access);
+  });
+});
+
+setTimeout(() => {
+  console.log(visibleRouters.value);
+}, 4000);
 </script>
 
 <template>

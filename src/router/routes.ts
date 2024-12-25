@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
+import ACCESS_ENUM from "@/access/accessEnum";
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -12,7 +13,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: "管理员可见",
     component: () => import("@/views/AdminView.vue"),
     meta: {
-      access: "canAdmin",
+      access: ACCESS_ENUM.ADMIN,
     },
   },
   {
