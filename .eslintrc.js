@@ -13,7 +13,9 @@ module.exports = {
     ecmaVersion: 2020,
   },
   rules: {
-    "no-console": process.env.NODE_ENV === "production" ? "warn" : "warn",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "warn",
+    // "no-console": process.env.NODE_ENV === "production" ? "warn" : "warn",
+    // "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "warn",
+    "no-console": "off",
+    "no-debugger": "off",
   },
 };

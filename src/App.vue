@@ -7,8 +7,16 @@
 import BasicLayout from "@/layouts/BasicLayout.vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { onMounted } from "vue";
 const router = useRouter();
 const store = useStore();
+
+const doInit = () => {
+  console.log("doInit");
+};
+onMounted(() => {
+  doInit();
+});
 router.beforeEach((to, from, next) => {
   if (to.meta?.access === "canAdmin") {
     // console.log(store.state.user.loginUser.role);
