@@ -6,7 +6,7 @@ import ACCESS_ENUM from "@/access/accessEnum";
  * @param needAccess
  * @return boolean
  */
-export const checkAccess = (LoginUser: any, needAccess: any): boolean => {
+export const checkAccess = (LoginUser: any, needAccess: string): boolean => {
   const loginUserAccess = LoginUser?.userRole ?? ACCESS_ENUM.NOT_LOGIN;
   if (needAccess === ACCESS_ENUM.NOT_LOGIN) {
     return true;

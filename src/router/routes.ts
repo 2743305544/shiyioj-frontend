@@ -28,6 +28,9 @@ export const routes: Array<RouteRecordRaw> = [
     path: "/404",
     name: "404",
     component: () => import("@/views/404Page.vue"),
+    // meta: {
+    //   hideInMenu: true,
+    // },
   },
   {
     path: "/about",
