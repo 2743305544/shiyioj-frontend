@@ -27,7 +27,7 @@ setTimeout(() => {
 }, 3000);
 
 const visibleRouters = computed(() => {
-  return routes.filter((item) => {
+  return routes.filter((item: any) => {
     if (item.meta?.hideInMenu) {
       return false;
     }
