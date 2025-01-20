@@ -13,7 +13,7 @@ const dataList = ref<Array<QuestionAllVo>>([]);
 const total = ref(0);
 
 const searchParams = ref<QuestionQueryRequest>({
-  pageSize: 10,
+  pageSize: 1,
   current: 1,
 });
 
@@ -154,6 +154,10 @@ const doDelete = async (record: QuestionAllVo) => {
     message.error("删除失败：" + res.message);
   }
 };
+const onPageChange = (page: number) => {
+  searchParams.value.current = page;
+  loadData();
+};
 </script>
 
 <template>
@@ -167,6 +171,7 @@ const doDelete = async (record: QuestionAllVo) => {
         current: searchParams.current,
         total: total,
       }"
+      @page-change="onPageChange"
     >
       <template #optional="{ record }">
         <a-space>
