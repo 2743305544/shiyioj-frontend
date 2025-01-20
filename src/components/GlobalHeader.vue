@@ -5,6 +5,8 @@ import { computed, reactive, Ref, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { checkAccess } from "@/access/checkAccess";
 import ACCESS_ENUM from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
+import message from "@arco-design/web-vue/es/message";
 const router = useRouter();
 
 const selectedKeys: Ref<string[]> = ref<string[]>(["/"]);
@@ -38,6 +40,16 @@ const visibleRouters = computed(() => {
 setTimeout(() => {
   console.log(visibleRouters.value);
 }, 4000);
+
+const onLogout = async () => {
+  const res = await UserControllerService.userLogoutUsingPost();
+  if (res.code == 0) {
+    message.success("登出成功");
+    window.location.reload();
+  } else {
+    message.error("登出失败：" + res.message);
+  }
+};
 </script>
 
 <template>
@@ -66,7 +78,32 @@ setTimeout(() => {
         </a-menu>
       </a-col>
       <a-col flex="100px">
-        <div>{{ store.state.user?.loginUser?.userName ?? "未登录" }}</div>
+        <div v-if="store.state.user.loginUser.userName == '未登录'">
+          <a-button
+            status="normal"
+            type="primary"
+            @click="router.push('/user/login')"
+            >登录</a-button
+          >
+        </div>
+        <div v-else style="display: flex; flex-direction: column">
+          <div style="justify-content: center; display: flex">
+            {{ store.state.user.loginUser.userName }}
+          </div>
+          <a-button
+            style="
+              justify-content: center;
+              margin-top: 10px;
+              display: flex;
+              margin-left: 20px;
+              margin-right: 20px;
+            "
+            type="primary"
+            status="danger"
+            @click="onLogout"
+            >登出</a-button
+          >
+        </div>
       </a-col>
     </a-row>
   </div>
