@@ -1,5 +1,5 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
+// /* generated using openapi-typescript-codegen -- do not edit */
+// /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";

@@ -19,6 +19,7 @@ export type { BaseResponse_Page_QuestionVo_ } from "./models/BaseResponse_Page_Q
 export type { BaseResponse_Page_User_ } from "./models/BaseResponse_Page_User_";
 export type { BaseResponse_Page_UserVO_ } from "./models/BaseResponse_Page_UserVO_";
 export type { BaseResponse_PostVO_ } from "./models/BaseResponse_PostVO_";
+export type { BaseResponse_QuestionAllVo_ } from "./models/BaseResponse_QuestionAllVo_";
 export type { BaseResponse_QuestionVo_ } from "./models/BaseResponse_QuestionVo_";
 export type { BaseResponse_string_ } from "./models/BaseResponse_string_";
 export type { BaseResponse_User_ } from "./models/BaseResponse_User_";

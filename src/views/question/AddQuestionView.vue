@@ -1,16 +1,21 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import MdEditor from "@/components/MdEditor.vue";
-import { QuestionControllerService } from "../../../generated";
+import {
+  QuestionAllVo,
+  QuestionControllerService,
+  QuestionUpdateRequest,
+} from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
+import { useRoute } from "vue-router";
 
-const form = reactive({
-  answer: "暴力",
-  content: "暴力",
+const form = ref({
+  answer: "",
+  content: "",
   judgeCase: [
     {
-      input: "1 2",
-      output: "3 4",
+      input: "",
+      output: "",
     },
   ],
   judgeConfig: {
@@ -18,37 +23,84 @@ const form = reactive({
     stackLimit: 1000,
     timeLimit: 1000,
   },
-  tags: ["栈", "简单"],
-  title: "A + B",
+  tags: [],
+  title: "",
 });
 const handleAdd = () => {
-  form.judgeCase.push({
+  form.value.judgeCase.push({
     input: "",
     output: "",
   });
 };
 const handleDelete = (index: number) => {
-  form.judgeCase.splice(index, 1);
+  form.value.judgeCase.splice(index, 1);
 };
 const doSubmit = async () => {
   console.log(form);
-  const res = await QuestionControllerService.addQuestionUsingPost(form);
-  if (res.code === 0) {
-    message.success("添加成功");
+  if (updatePage) {
+    const res = await QuestionControllerService.updateQuestionUsingPost(
+      form.value
+    );
+    if (res.code === 0) {
+      message.success("更新成功");
+    } else {
+      message.error("更新失败：" + res.message);
+    }
   } else {
-    message.error("添加失败：" + res.message);
+    const res = await QuestionControllerService.addQuestionUsingPost(
+      form.value
+    );
+    if (res.code === 0) {
+      message.success("添加成功");
+    } else {
+      message.error("添加失败：" + res.message);
+    }
   }
 };
 const onContentChange = (v: string) => {
-  form.content = v;
+  form.value.content = v;
 };
 const onAnswerChange = (v: string) => {
-  form.answer = v;
+  form.value.answer = v;
 };
+const route = useRoute();
+const updatePage = route.path.includes("update");
+
+const loadData = async () => {
+  const id: number | null = route.query.id as number | null;
+  if (!id) return;
+  const res = await QuestionControllerService.getQuestionByIdUsingGet(id);
+  if (res.code === 0) {
+    form.value = res.data as any;
+    if (!form.value.judgeConfig) {
+      form.value.judgeConfig = {
+        memoryLimit: 1000,
+        stackLimit: 1000,
+        timeLimit: 1000,
+      };
+    }
+    if (!form.value.judgeCase) {
+      form.value.judgeCase = [
+        {
+          input: "",
+          output: "",
+        },
+      ];
+    }
+  } else {
+    message.error("加载失败：" + res.message);
+  }
+};
+onMounted(() => {
+  if (updatePage) {
+    loadData();
+  }
+});
 </script>
 
 <template>
-  <div id="addQuestionView">创建题目</div>
+  <div id="addQuestionView" v-if="!updatePage">创建题目</div>
+  <div id="addQuestionView" v-else>更新题目</div>
   <a-form :model="form">
     <a-form-item field="title" label="标题">
       <a-input

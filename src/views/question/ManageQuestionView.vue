@@ -4,6 +4,7 @@ import { QuestionControllerService } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import type { QuestionQueryRequest } from "../../../generated";
 import type { QuestionAllVo } from "../../../generated";
+import { useRouter } from "vue-router";
 
 const show = ref(true);
 
@@ -133,8 +134,15 @@ const columns = [
     slotName: "optional",
   },
 ];
-
-const doUpdate = (record: QuestionAllVo) => {};
+const router = useRouter();
+const doUpdate = (record: QuestionAllVo) => {
+  router.push({
+    path: "/update/question",
+    query: {
+      id: record.id,
+    },
+  });
+};
 const doDelete = async (record: QuestionAllVo) => {
   const res = await QuestionControllerService.deleteQuestionUsingPost({
     id: record.id,

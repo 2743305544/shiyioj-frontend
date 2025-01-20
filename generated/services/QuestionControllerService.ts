@@ -1,11 +1,12 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
+// /* generated using openapi-typescript-codegen -- do not edit */
+// /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
 import type { BaseResponse_boolean_ } from "../models/BaseResponse_boolean_";
 import type { BaseResponse_long_ } from "../models/BaseResponse_long_";
 import type { BaseResponse_Page_QuestionAllVo_ } from "../models/BaseResponse_Page_QuestionAllVo_";
 import type { BaseResponse_Page_QuestionVo_ } from "../models/BaseResponse_Page_QuestionVo_";
+import type { BaseResponse_QuestionAllVo_ } from "../models/BaseResponse_QuestionAllVo_";
 import type { BaseResponse_QuestionVo_ } from "../models/BaseResponse_QuestionVo_";
 import type { DeleteRequest } from "../models/DeleteRequest";
 import type { QuestionAddRequest } from "../models/QuestionAddRequest";
@@ -72,6 +73,28 @@ export class QuestionControllerService {
       method: "POST",
       url: "/api/question/edit",
       body: questionEditRequest,
+      errors: {
+        401: `Unauthorized`,
+        403: `Forbidden`,
+        404: `Not Found`,
+      },
+    });
+  }
+  /**
+   * getQuestionById
+   * @param id id
+   * @returns BaseResponse_QuestionAllVo_ OK
+   * @throws ApiError
+   */
+  public static getQuestionByIdUsingGet(
+    id?: number
+  ): CancelablePromise<BaseResponse_QuestionAllVo_> {
+    return __request(OpenAPI, {
+      method: "GET",
+      url: "/api/question/get",
+      query: {
+        id: id,
+      },
       errors: {
         401: `Unauthorized`,
         403: `Forbidden`,
