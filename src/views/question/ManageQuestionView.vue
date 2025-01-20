@@ -13,7 +13,7 @@ const dataList = ref<Array<QuestionAllVo>>([]);
 const total = ref(0);
 
 const searchParams = ref<QuestionQueryRequest>({
-  pageSize: 1,
+  pageSize: 10,
   current: 1,
 });
 
@@ -158,31 +158,60 @@ const onPageChange = (page: number) => {
   searchParams.value.current = page;
   loadData();
 };
+const onSearch = async (value: string, ev: MouseEvent) => {
+  if (value === "") {
+    searchParams.value.id = undefined;
+    loadData();
+    return;
+  }
+  const parseInt = Number(value);
+  if (!Number.isInteger(parseInt)) {
+    message.error("请输入数字");
+    return;
+  }
+  searchParams.value.id = parseInt;
+  const res = await QuestionControllerService.listQuestionByPageUsingPost(
+    searchParams.value
+  );
+  if (res.code === 0) {
+    dataList.value = res.data.records;
+    total.value = res.data.total;
+  } else {
+    message.error("加载失败：" + res.message);
+  }
+};
 </script>
 
 <template>
   <div id="manageQuestionView">
-    <a-table
-      :columns="columns"
-      :data="dataList"
-      :pagination="{
-        showTotal: true,
-        pageSize: searchParams.pageSize,
-        current: searchParams.current,
-        total: total,
-      }"
-      @page-change="onPageChange"
-    >
-      <template #optional="{ record }">
-        <a-space>
-          <a-button type="primary" @click="doUpdate(record)">修改</a-button>
-          <a-space></a-space>
-          <a-button status="danger" @click="doDelete(record)"
-            >删除</a-button
-          ></a-space
-        >
-      </template>
-    </a-table>
+    <a-space direction="vertical" fill size="large">
+      <a-input-search
+        :style="{ width: '320px' }"
+        placeholder="Please enter id"
+        @search="onSearch"
+      />
+      <a-table
+        :columns="columns"
+        :data="dataList"
+        :pagination="{
+          showTotal: true,
+          pageSize: searchParams.pageSize,
+          current: searchParams.current,
+          total: total,
+        }"
+        @page-change="onPageChange"
+      >
+        <template #optional="{ record }">
+          <a-space>
+            <a-button type="primary" @click="doUpdate(record)">修改</a-button>
+            <a-space></a-space>
+            <a-button status="danger" @click="doDelete(record)"
+              >删除</a-button
+            ></a-space
+          >
+        </template>
+      </a-table>
+    </a-space>
   </div>
 </template>
 
