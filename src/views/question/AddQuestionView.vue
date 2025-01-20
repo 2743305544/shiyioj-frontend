@@ -36,7 +36,7 @@ const doSubmit = async () => {
   if (res.code === 0) {
     message.success("添加成功");
   } else {
-    message.error("添加失败：" + res.msg);
+    message.error("添加失败：" + res.message);
   }
 };
 const onContentChange = (v: string) => {

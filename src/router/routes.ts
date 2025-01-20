@@ -37,6 +37,14 @@ export const routes: Array<RouteRecordRaw> = [
     // },
   },
   {
+    path: "/manage/question",
+    name: "管理题目",
+    component: () => import("@/views/question/ManageQuestionView.vue"),
+    // meta: {
+    //   access: ACCESS_ENUM.ADMIN,
+    // },
+  },
+  {
     path: "/admin",
     name: "管理员可见",
     component: () => import("@/views/AdminView.vue"),
