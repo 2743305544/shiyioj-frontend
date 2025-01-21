@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { QuestionControllerService } from "../../../generated";
+import { QuestionControllerService, QuestionVo } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import type { QuestionQueryRequest } from "../../../generated";
 import type { QuestionAllVo } from "../../../generated";
@@ -8,17 +8,20 @@ import { useRouter } from "vue-router";
 
 // const show = ref(true);
 
-const dataList = ref<Array<QuestionAllVo>>([]);
+const dataList = ref<Array<QuestionVo>>([]);
 
 const total = ref(0);
 
 const searchParams = ref<QuestionQueryRequest>({
+  id: undefined,
+  title: "",
+  tags: [],
   pageSize: 10,
   current: 1,
 });
 
 const loadData = async () => {
-  let res = await QuestionControllerService.listQuestionByPageUsingPost(
+  let res = await QuestionControllerService.listQuestionVoByPageUsingPost(
     searchParams.value
   );
   if (res.code === 0) {
@@ -32,70 +35,6 @@ const loadData = async () => {
 onMounted(() => {
   loadData();
 });
-
-/**请求
- * {
- *   "answer": "",
- *   "content": "",
- *   "current": 0,
- *   "id": null,
- *   "pageSize": 2,
- *   "sortField": "",
- *   "sortOrder": "",
- *   "tags": [],
- *   "title": "",
- *   "userId": null
- * }
- */
-/**响应
- * {
- *  "code": 0,
- *  "data": {
- *    "countId": "",
- *    "current": 0,
- *    "maxLimit": 0,
- *    "optimizeCountSql": true,
- *    "orders": [
- *      {
- *        "asc": true,
- *        "column": ""
- *      }
- *    ],
- *    "pages": 0,
- *    "records": [
- *      {
- *        "acceptNum": 0,
- *        "answer": "",
- *        "content": "",
- *        "createTime": "",
- *        "favourNum": 0,
- *        "id": 0,
- *        "judgeCase": [
- *          {
- *            "input": "",
- *            "output": ""
- *          }
- *        ],
- *        "judgeConfig": {
- *          "memoryLimit": 0,
- *          "stackLimit": 0,
- *          "timeLimit": 0
- *        },
- *        "submitNum": 0,
- *        "tags": [],
- *        "thumbNum": 0,
- *        "title": "",
- *        "updateTime": "",
- *        "userId": 0
- *      }
- *    ],
- *    "searchCount": true,
- *    "size": 0,
- *    "total": 0
- *  },
- *  "message": ""
- * }
- */
 const columns = [
   {
     title: "Id",
@@ -106,58 +45,31 @@ const columns = [
     dataIndex: "title",
   },
   {
-    title: "内容",
-    dataIndex: "content",
-  },
-  {
     title: "标签",
     dataIndex: "tags",
     slotName: "tags",
   },
   {
-    title: "提交数",
-    dataIndex: "submitNum",
-  },
-  {
-    title: "通过数",
-    dataIndex: "acceptNum",
-  },
-  {
-    title: "用户id",
-    dataIndex: "userId",
+    title: "通过率",
+    slotName: "acceptedRate",
   },
   {
     title: "创建时间",
     slotName: "createTime",
   },
   {
-    title: "更新时间",
-    slotName: "updateTime",
-  },
-  {
-    title: "操作",
     slotName: "optional",
   },
 ];
 const router = useRouter();
-const doUpdate = (record: QuestionAllVo) => {
+/**
+ * 跳转到问题详情页
+ * @param record
+ */
+const toQuestionPage = (record: QuestionVo) => {
   router.push({
-    path: "/update/question",
-    query: {
-      id: record.id,
-    },
+    path: "/question/" + record.id,
   });
-};
-const doDelete = async (record: QuestionAllVo) => {
-  const res = await QuestionControllerService.deleteQuestionUsingPost({
-    id: record.id,
-  });
-  if (res.code === 0) {
-    message.success("删除成功");
-    loadData();
-  } else {
-    message.error("删除失败：" + res.message);
-  }
 };
 const onPageChange = (page: number) => {
   searchParams.value.current = page;
@@ -176,7 +88,19 @@ const onSearch = async (value: string, ev: MouseEvent) => {
   }
   searchParams.value.id = parseInt;
   searchParams.value.current = 1;
-  const res = await QuestionControllerService.listQuestionByPageUsingPost(
+  const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
+    searchParams.value
+  );
+  if (res.code === 0) {
+    dataList.value = res.data.records;
+    total.value = res.data.total;
+  } else {
+    message.error("加载失败：" + res.message);
+  }
+};
+const onSearch1 = async () => {
+  searchParams.value.current = 1;
+  const res = await QuestionControllerService.listQuestionVoByPageUsingPost(
     searchParams.value
   );
   if (res.code === 0) {
@@ -191,11 +115,36 @@ const onSearch = async (value: string, ev: MouseEvent) => {
 <template>
   <div id="manageQuestionView">
     <a-space direction="vertical" fill size="large">
-      <a-input-search
-        :style="{ width: '320px' }"
-        placeholder="Please enter id"
-        @search="onSearch"
-      />
+      <a-space style="display: flex; justify-content: space-between">
+        <a-input-search
+          :style="{ width: '320px' }"
+          placeholder="Please enter id"
+          @search="onSearch"
+        />
+        <a-form :model="searchParams" :layout="'inline'">
+          <a-form-item field="title" label="标题">
+            <a-input
+              v-model="searchParams.title"
+              placeholder="please enter your title..."
+            />
+          </a-form-item>
+          <a-form-item field="tags" label="标签">
+            <a-input-tag
+              style="max-width: 700px"
+              v-model="searchParams.tags"
+              placeholder="please enter your tags..."
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button
+              type="primary"
+              style="border-radius: 10px"
+              @click="onSearch1"
+              >查询</a-button
+            >
+          </a-form-item>
+        </a-form>
+      </a-space>
       <a-table
         :columns="columns"
         :data="dataList"
@@ -217,28 +166,26 @@ const onSearch = async (value: string, ev: MouseEvent) => {
             >
           </a-space>
         </template>
+        <template #acceptedRate="{ record }">
+          {{
+            `${record.submitNum ? record.acceptNum / record.submitNum : "0"}(${
+              record.acceptNum
+            } / ${record.submitNum}
+            )`
+          }}
+        </template>
         <template #createTime="{ record }"
           ><a-tag>{{ record.createTime }}</a-tag>
-        </template>
-        <template #updateTime="{ record }"
-          ><a-tag>{{ record.updateTime }}</a-tag>
         </template>
         <template #optional="{ record }">
           <a-space>
             <a-button
               type="primary"
-              @click="doUpdate(record)"
+              @click="toQuestionPage(record)"
               style="border-radius: 10px"
-              >修改</a-button
+              >进入</a-button
             >
-            <a-space></a-space>
-            <a-button
-              status="danger"
-              @click="doDelete(record)"
-              style="border-radius: 10px"
-              >删除</a-button
-            ></a-space
-          >
+          </a-space>
         </template>
       </a-table>
     </a-space>

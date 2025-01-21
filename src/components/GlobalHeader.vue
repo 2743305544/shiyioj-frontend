@@ -26,7 +26,7 @@ setTimeout(() => {
     userName: "失意",
     userRole: ACCESS_ENUM.ADMIN,
   });
-}, 3000);
+}, 500);
 
 const visibleRouters = computed(() => {
   return routes.filter((item: any) => {
@@ -97,6 +97,7 @@ const onLogout = async () => {
               display: flex;
               margin-left: 20px;
               margin-right: 20px;
+              border-radius: 10px;
             "
             type="primary"
             status="danger"

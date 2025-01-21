@@ -24,9 +24,14 @@ export const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/",
+    path: "/question",
     name: "浏览题目",
-    component: HomeView,
+    component: () => import("@/views/question/QuestionView.vue"),
+  },
+  {
+    path: "/",
+    name: "主页",
+    component: () => import("@/views/question/QuestionView.vue"),
   },
   {
     path: "/add/question",
