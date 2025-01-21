@@ -1,4 +1,5 @@
 import ACCESS_ENUM from "@/access/accessEnum";
+import message from "@arco-design/web-vue/es/message";
 
 /**
  *
@@ -13,6 +14,8 @@ export const checkAccess = (LoginUser: any, needAccess: string): boolean => {
   }
   if (needAccess === ACCESS_ENUM.USER) {
     if (loginUserAccess === ACCESS_ENUM.NOT_LOGIN) {
+      message.warning("请先登录");
+      window.location.reload();
       return false;
     }
   }

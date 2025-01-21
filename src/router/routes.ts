@@ -29,6 +29,16 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/question/QuestionView.vue"),
   },
   {
+    path: "/view/question/:id",
+    name: "题目答题页",
+    props: true,
+    component: () => import("@/views/question/QuestionDetailView.vue"),
+    meta: {
+      hideInMenu: true,
+      access: ACCESS_ENUM.USER,
+    },
+  },
+  {
     path: "/",
     name: "主页",
     component: () => import("@/views/question/QuestionView.vue"),

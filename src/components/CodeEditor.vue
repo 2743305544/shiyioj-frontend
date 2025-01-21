@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import * as monaco from "monaco-editor";
-import { onMounted, ref, toRaw } from "vue";
+import { onMounted, ref, toRaw, watch } from "vue";
 import { withDefaults, defineProps } from "vue";
 const codeEditorRef = ref();
 const codeEditor = ref();
 const value = ref("Hello, world!");
 interface Props {
   value: string;
+  language: string;
   handleChange: (v: string) => void;
 }
 const props = withDefaults(defineProps<Props>(), {
   value: () => "",
+  language: () => "java",
   handleChange: (v: string) => {
     console.log(v);
   },
 });
+watch(
+  () => props.language,
+  (newVal) => {
+    monaco.editor.setModelLanguage(toRaw(codeEditor.value.getModel()), newVal);
+  }
+);
 onMounted(() => {
   if (!codeEditorRef.value) return;
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
@@ -36,7 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="code-editor" ref="codeEditorRef" style="min-height: 400px"></div>
+  <div id="code-editor" ref="codeEditorRef" style="min-height: 800px"></div>
 </template>
 
 <style scoped></style>

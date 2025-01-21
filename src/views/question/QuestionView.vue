@@ -3,7 +3,6 @@ import { onMounted, ref } from "vue";
 import { QuestionControllerService, QuestionVo } from "../../../generated";
 import message from "@arco-design/web-vue/es/message";
 import type { QuestionQueryRequest } from "../../../generated";
-import type { QuestionAllVo } from "../../../generated";
 import { useRouter } from "vue-router";
 
 // const show = ref(true);
@@ -68,7 +67,7 @@ const router = useRouter();
  */
 const toQuestionPage = (record: QuestionVo) => {
   router.push({
-    path: "/question/" + record.id,
+    path: "/view/question/" + record.id,
   });
 };
 const onPageChange = (page: number) => {
