@@ -38,10 +38,15 @@ export const routes: Array<RouteRecordRaw> = [
       access: ACCESS_ENUM.USER,
     },
   },
+  // {
+  //   path: "/",
+  //   name: "主页",
+  //   component: () => import("@/views/question/QuestionView.vue"),
+  // },
   {
-    path: "/",
-    name: "主页",
-    component: () => import("@/views/question/QuestionView.vue"),
+    path: "/view/questionSubmit",
+    name: "提交列表",
+    component: () => import("@/views/question/QuestionSubmitListView.vue"),
   },
   {
     path: "/add/question",
