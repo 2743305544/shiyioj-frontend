@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import {
+  JudgeInfo,
   QuestionControllerService,
   QuestionSubmitControllerService,
   QuestionSubmitQueryRequest,
@@ -66,7 +67,7 @@ const columns = [
   },
   {
     title: "状态",
-    dataIndex: "status",
+    slotName: "status",
   },
   {
     title: "创建时间",
@@ -116,11 +117,13 @@ const handleCancel = () => {
 const currentCode = ref({
   code: "",
   language: "",
+  judgeInfo: {},
 });
 const handleClick = (record: QuestionSubmitVo) => {
   visible.value = true;
   currentCode.value.code = record.code as string;
   currentCode.value.language = record.language as string;
+  currentCode.value.judgeInfo = record.judgeInfo as JudgeInfo;
 };
 </script>
 
@@ -145,6 +148,12 @@ const handleClick = (record: QuestionSubmitVo) => {
         }"
         @page-change="onPageChange"
       >
+        <template #status="{ record }">
+          <a-tag v-if="record.status === 0" :color="'gold'">未判题</a-tag>
+          <a-tag v-else-if="record.status === 1" :color="'blue'">判题中</a-tag>
+          <a-tag v-else-if="record.status === 2" :color="'green'">已判题</a-tag>
+          <a-tag v-else :color="'red'">判题失败</a-tag>
+        </template>
         <template #createTime="{ record }"
           ><a-tag>{{ record.createTime }}</a-tag>
         </template>
@@ -160,6 +169,10 @@ const handleClick = (record: QuestionSubmitVo) => {
             >
               <template #title> 代码 </template>
               <div v-if="currentCode.code">
+                <a-card v-if="currentCode.judgeInfo">{{
+                  currentCode.judgeInfo
+                }}</a-card>
+                <a-space />
                 <CodeViewer
                   :value="currentCode.code"
                   :language="currentCode.language"
