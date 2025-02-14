@@ -133,7 +133,7 @@ const handleClick = (record: QuestionSubmitVo) => {
       <a-space style="display: flex; justify-content: space-between">
         <a-input-search
           :style="{ width: '320px' }"
-          placeholder="Please enter id"
+          placeholder="Please enter userId"
           @search="onSearch"
         />
       </a-space>

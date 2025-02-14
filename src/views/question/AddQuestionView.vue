@@ -147,7 +147,7 @@ onMounted(() => {
           <a-space direction="vertical">
             <a-form-item
               field="JudgeConfig.memoryLimit"
-              label="时间限制"
+              label="内存限制"
               style="min-width: 480px"
             >
               <a-input-number
@@ -174,8 +174,8 @@ onMounted(() => {
               />
             </a-form-item>
             <a-form-item
-              field="JudgeConfig.memoryLimit"
-              label="内存限制"
+              field="JudgeConfig.timeLimit"
+              label="时间限制"
               style="min-width: 480px"
             >
               <a-input-number
