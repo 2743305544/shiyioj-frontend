@@ -47,6 +47,10 @@ yarn install
 # 或
 npm install
 ```
+### 相关项目
+- [ShiYiOJ Judge System - Backend](https://github.com/2743305544/shiyioj-backend)
+- [JavaCodeSandbox](https://github.com/2743305544/JavaCodeSandbox)
+
 ### 相关项目截图
 ![img.png](img.png)
 ![img_1.png](img_1.png)
